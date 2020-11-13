@@ -14,4 +14,10 @@ router.route("/login")
         });
     });
 
+router.route("/logout")
+    .get(usersController.logout);
+
+router.route("/")
+    .get(usersController.getUser);
+
 module.exports = router;
