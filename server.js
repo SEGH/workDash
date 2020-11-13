@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const routes = require("./routes");
 const bodyParser = require("body-parser");
+const passport = require("./config/passport");
 
 require("dotenv").config();
 const PORT = process.env.PORT || 3001;
@@ -17,6 +18,7 @@ if (process.env.NODE_ENV === "production") {
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(passport.initialize());
 
 // Routes
 app.use(routes);
