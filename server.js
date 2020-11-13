@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const routes = require("./routes");
 const bodyParser = require("body-parser");
 const passport = require("./config/passport");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
 
 require("dotenv").config();
 const PORT = process.env.PORT || 3001;
@@ -16,9 +18,12 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // Middleware
+app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
+app.use(passport.session());
 
 // Routes
 app.use(routes);
