@@ -12,5 +12,11 @@ module.exports = {
             })
             .then(user => res.json(user))
             .catch(err => res.status(422).json(err));
+    },
+    logout: function (req, res) {
+        req.logout();
+    },
+    getUser: function (req, res) {
+        res.send(req.user);
     }
 };
