@@ -19,14 +19,23 @@ export class AuthenticationService {
   //   return this.http.post(`http://localhost:3001/api/users/login`, user).toPromise();
   // }
   private request(
-    method: "post",
-    type: "login",
-    user: UserData
+    method: "post" | "get",
+    type: "login" | "dashboard",
+    user?: UserData
   ): Observable<any> {
-    return this.http.post(`api/users/login`, user);
+    if (method === "post") {
+      return this.http.post(`api/users/login`, user);
+    } else {
+      return this.http.get(`api/users/`);
+    }
+
   }
 
   public loginUser(user: UserData): Observable<any> {
     return this.request("post", "login", user);
+  }
+
+  public getUser(): Observable<any> {
+    return this.request("get", "dashboard");
   }
 }
