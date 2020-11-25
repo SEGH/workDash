@@ -23,7 +23,7 @@ export class AuthenticationService {
     type: "login",
     user: UserData
   ): Observable<any> {
-    return this.http.post(`http://localhost:3001/api/users/login`, user);
+    return this.http.post(`api/users/login`, user);
   }
 
   public loginUser(user: UserData): Observable<any> {
