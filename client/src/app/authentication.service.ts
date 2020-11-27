@@ -20,13 +20,15 @@ export class AuthenticationService {
   // }
   private request(
     method: "post" | "get",
-    type: "login" | "dashboard",
+    type: "login" | "dashboard" | "logout",
     user?: UserData
   ): Observable<any> {
     if (method === "post") {
       return this.http.post(`api/users/login`, user);
-    } else {
+    } else if (type === "dashboard") {
       return this.http.get(`api/users/`);
+    } else {
+      return this.http.get(`api/users/${type}`);
     }
 
   }
@@ -37,5 +39,9 @@ export class AuthenticationService {
 
   public getUser(): Observable<any> {
     return this.request("get", "dashboard");
+  }
+
+  public logout() {
+    return this.request("get", "logout");
   }
 }
