@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService, UserData } from "../authentication.service";
 import { Router } from "@angular/router";
+import { AppComponent } from "../app.component";
 
 @Component({
   templateUrl: './login.component.html',
@@ -8,7 +9,7 @@ import { Router } from "@angular/router";
 })
 export class LoginComponent {
 
-  constructor(private authService: AuthenticationService, private router: Router) { }
+  constructor(private authService: AuthenticationService, private router: Router, private app: AppComponent) { }
 
   user: UserData = {
     username: "",
@@ -19,6 +20,7 @@ export class LoginComponent {
     console.log(this.user);
     this.authService.loginUser(this.user).subscribe(
       () => {
+        this.app.isLoggedIn = true;
         this.router.navigateByUrl("/dashboard");
       }
     );
