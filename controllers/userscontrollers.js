@@ -14,10 +14,12 @@ module.exports = {
             .catch(err => res.status(422).json(err));
     },
     logout: function (req, res) {
+        console.log("logging out")
         req.logout();
+        res.send(req.status);
     },
     getUser: function (req, res) {
-        console.log(req.user);
+        // console.log(req.user);
         res.send(req.user);
     }
 };
