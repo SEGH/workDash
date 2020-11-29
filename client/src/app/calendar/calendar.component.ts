@@ -1,5 +1,5 @@
-import { Component, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
-import { isSameDay, isSameMonth, addHours } from "date-fns";
+import { Component, ChangeDetectionStrategy, ViewChild, TemplateRef, AfterViewInit, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { isSameDay, isSameMonth, addHours, differenceInMinutes, startOfDay, startOfHour } from "date-fns";
 import { Subject } from "rxjs";
 import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView } from "angular-calendar";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
@@ -26,8 +26,9 @@ const colors: any = {
   styleUrls: ['./calendar.component.css']
 })
 
-export class CalendarComponent {
+export class CalendarComponent implements AfterViewInit {
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
+  @ViewChild('scrollContainer') scrollContainer: ElementRef<HTMLElement>;
 
   view: CalendarView = CalendarView.Day;
 
@@ -98,7 +99,29 @@ export class CalendarComponent {
   // clickedDate: Date;
   // clickedColumn: number;
 
-  constructor(private modal: NgbModal) {}
+  constructor(private modal: NgbModal, private cdr: ChangeDetectorRef) {}
+
+  ngAfterViewInit() {
+    this.scrollToCurrentView();
+  }
+
+  viewChanged() {
+    this.cdr.detectChanges();
+    this.scrollToCurrentView();
+  }
+
+  private scrollToCurrentView() {
+    if (this.view === CalendarView.Week || CalendarView.Day) {
+      // each hour is 60px high, so to get the pixels to scroll it's just the amount of minutes since midnight
+      const minutesSinceStartOfDay = differenceInMinutes(
+        startOfHour(new Date()),
+        startOfDay(new Date())
+      );
+      const headerHeight = this.view === CalendarView.Week ? 60 : 0;
+      this.scrollContainer.nativeElement.scrollTop =
+        minutesSinceStartOfDay + headerHeight;
+    }
+  }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
