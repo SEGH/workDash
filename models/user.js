@@ -10,7 +10,13 @@ const UserSchema = new Schema ({
     password: {
         type: String,
         required: true
-    }
+    },
+    events: [
+        {
+            type: Schema.ObjectId,
+            ref: "Event"
+        }
+    ]
 });
 
 // Method to check password used when loggin in
