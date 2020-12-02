@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService, UserData } from "../authentication.service";
+import { AppComponent } from "../app.component";
 
 @Component({
   selector: 'app-dashboard',
@@ -8,17 +9,20 @@ import { AuthenticationService, UserData } from "../authentication.service";
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(private authService: AuthenticationService) { }
+  constructor(private authService: AuthenticationService, private app: AppComponent) { }
 
   user: UserData = {
     username: "",
-    password: ""
+    password: "",
+    id: ""
   }
 
   ngOnInit() {
     this.authService.getUser().subscribe(
       user => {
         this.user.username = user.username;
+        this.user.id = user._id;
+        console.log(`getting user ${this.user.id}`)
       },
       err => {
         console.error(err);
