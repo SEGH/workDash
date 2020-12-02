@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 
 export interface UserData {
   username: string,
-  password: string
+  password: string,
+  id: string
 }
 
 @Injectable({
