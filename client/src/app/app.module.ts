@@ -14,6 +14,7 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CalendarComponent } from './calendar/calendar.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CalendarService } from './calendar/calendar.service';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
     NgbModule
   ],
-  providers: [AuthenticationService],
+  providers: [AuthenticationService, CalendarService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
