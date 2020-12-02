@@ -13,7 +13,8 @@ export class LoginComponent {
 
   user: UserData = {
     username: "",
-    password: ""
+    password: "",
+    id: ""
   }
 
   login() {
