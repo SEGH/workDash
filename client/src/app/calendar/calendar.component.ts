@@ -1,8 +1,9 @@
-import { Component, ChangeDetectionStrategy, ViewChild, TemplateRef, AfterViewInit, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, TemplateRef, AfterViewInit, ElementRef, ChangeDetectorRef, Input } from '@angular/core';
 import { isSameDay, isSameMonth, addHours, differenceInMinutes, startOfDay, startOfHour } from "date-fns";
 import { Subject } from "rxjs";
 import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView } from "angular-calendar";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { CalendarService, EventData } from "./calendar.service";
 
 const colors: any = {
   red: {
@@ -27,6 +28,9 @@ const colors: any = {
 })
 
 export class CalendarComponent implements AfterViewInit {
+  @Input() userName: string;
+  @Input() userId: string;
+
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
   @ViewChild('scrollContainer') scrollContainer: ElementRef<HTMLElement>;
 
@@ -99,7 +103,7 @@ export class CalendarComponent implements AfterViewInit {
   // clickedDate: Date;
   // clickedColumn: number;
 
-  constructor(private modal: NgbModal, private cdr: ChangeDetectorRef) {}
+  constructor(private modal: NgbModal, private cdr: ChangeDetectorRef, private calendarService: CalendarService) {}
 
   ngAfterViewInit() {
     this.scrollToCurrentView();
@@ -163,22 +167,40 @@ export class CalendarComponent implements AfterViewInit {
     this.selectedEvent = event;
   }
 
+  event: EventData = {
+    title: "",
+    start: new Date(),
+    end: new Date(),
+    color: "",
+    actions: this.actions,
+    draggable: true,
+    resizeable: {}
+  }
+
   addEvent(clickedDate: Date): void {
+    this.event =       {
+      title: 'New event - Click to Edit',
+      start: clickedDate,
+      end: addHours(clickedDate, 1),
+      color: colors.red,
+      actions: this.actions,
+      draggable: true,
+      resizeable: {
+        beforeStart: true,
+        afterEnd: true,
+      }
+    };
+
     this.events = [
       ...this.events,
-      {
-        title: 'New event - Click to Edit',
-        start: clickedDate,
-        end: addHours(clickedDate, 1),
-        color: colors.red,
-        actions: this.actions,
-        draggable: true,
-        resizable: {
-          beforeStart: true,
-          afterEnd: true,
-        }
-      },
+      this.event
     ];
+
+    this.calendarService.saveEvent(this.event, this.userId).subscribe(
+      () => {
+        console.log(`event requested for ${this.userId}`)
+      }
+    );
   }
 
   eventInput: string;
