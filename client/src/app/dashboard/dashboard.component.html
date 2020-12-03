@@ -3,5 +3,5 @@
         <h1>Hi, {{ user?.username }}!</h1>
         <h2>Here's what you have going on today</h2>
     </div>
-    <app-calendar [userName]="user.username" [userId]="user.id"></app-calendar>
+    <app-calendar [userName]="user.username" [userId]="user.id" *ngIf="user.id"></app-calendar>
 </div>
