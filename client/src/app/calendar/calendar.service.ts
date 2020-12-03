@@ -1,15 +1,13 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
 import { Observable } from "rxjs";
-import { CalendarEventAction } from 'angular-calendar';
-
 
 export interface EventData {
     title: string,
     start: Date,
     end?: Date,
     color: any,
-    actions?: CalendarEventAction[],
+    actions?: any,
     draggable?: boolean,
     resizable?: {
       beforeStart?: boolean;
