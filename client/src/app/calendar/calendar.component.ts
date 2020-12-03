@@ -22,7 +22,7 @@ const colors: any = {
 
 @Component({
   selector: 'app-calendar',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
@@ -57,46 +57,7 @@ export class CalendarComponent implements AfterViewInit {
 
   refresh: Subject<any> = new Subject();
 
-  events: CalendarEvent[] = [
-    // {
-    //   start: subDays(startOfDay(new Date()), 1),
-    //   end: addDays(new Date(), 1),
-    //   title: 'A 3 day event',
-    //   color: colors.red,
-    //   actions: this.actions,
-    //   allDay: true,
-    //   resizable: {
-    //     beforeStart: true,
-    //     afterEnd: true,
-    //   },
-    //   draggable: true,
-    // },
-    // {
-    //   start: startOfDay(new Date()),
-    //   title: 'An event with no end date',
-    //   color: colors.yellow,
-    //   actions: this.actions,
-    // },
-    // {
-    //   start: subDays(endOfMonth(new Date()), 3),
-    //   end: addDays(endOfMonth(new Date()), 3),
-    //   title: 'A long event that spans 2 months',
-    //   color: colors.blue,
-    //   allDay: true,
-    // },
-    // {
-    //   start: addHours(startOfDay(new Date()), 2),
-    //   end: addHours(new Date(), 2),
-    //   title: 'A draggable and resizable event',
-    //   color: colors.yellow,
-    //   actions: this.actions,
-    //   resizable: {
-    //     beforeStart: true,
-    //     afterEnd: true,
-    //   },
-    //   draggable: true,
-    // },
-  ];
+  events: CalendarEvent[] = [];
 
   activeDayIsOpen: boolean = true;
 
@@ -104,9 +65,10 @@ export class CalendarComponent implements AfterViewInit {
   // clickedColumn: number;
 
   constructor(private modal: NgbModal, private cdr: ChangeDetectorRef, private calendarService: CalendarService) {}
-
+  
   ngAfterViewInit() {
     this.scrollToCurrentView();
+    this.getAllEvents();
   }
 
   viewChanged() {
@@ -125,6 +87,28 @@ export class CalendarComponent implements AfterViewInit {
       this.scrollContainer.nativeElement.scrollTop =
         minutesSinceStartOfDay + headerHeight;
     }
+  }
+
+  getAllEvents() {
+    this.calendarService.getEvents(this.userId).subscribe(
+      userEvents => {
+        console.log(userEvents);
+        userEvents.events.forEach(event => {
+          this.events = [
+            ...this.events,
+            {
+              title: event.title,
+              start: new Date(event.start),
+              end: new Date(event.end),
+              color: event.color,
+              actions: event.actions,
+              draggable: event.draggable,
+              resizable: event.resizable
+            }
+          ]
+          })
+        })
+        console.log(this.events);
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
@@ -174,7 +158,10 @@ export class CalendarComponent implements AfterViewInit {
     color: "",
     actions: this.actions,
     draggable: true,
-    resizeable: {}
+    resizable: {
+      beforeStart: true,
+      afterEnd: true,
+    }
   }
 
   addEvent(clickedDate: Date): void {
@@ -185,7 +172,7 @@ export class CalendarComponent implements AfterViewInit {
       color: colors.red,
       actions: this.actions,
       draggable: true,
-      resizeable: {
+      resizable: {
         beforeStart: true,
         afterEnd: true,
       }
