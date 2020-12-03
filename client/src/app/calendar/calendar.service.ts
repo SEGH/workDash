@@ -32,7 +32,7 @@ export class CalendarService {
         if (method === "post") {
           return this.http.post(`api/events/${userId}`, event)
         } else {
-          return this.http.get(`api/events/5fadd31bdc630d854c5832ea`);
+          return this.http.get(`api/events/${userId}`);
         }
 
     }
