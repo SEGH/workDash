@@ -27,5 +27,14 @@ module.exports = {
                     });
             })
             .catch(err => res.status(422).json(err));
+    },
+    getAll: function (req, res) {
+        db.User
+            .findById({ _id: req.params.userId })
+            .populate({
+                path: "events"
+            })
+            .then(events => res.json(events))
+            .catch(err => res.status(422).json(err));
     }
 }
