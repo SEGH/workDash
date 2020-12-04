@@ -38,12 +38,12 @@ module.exports = {
             .catch(err => res.status(422).json(err));
     },
     remove: function (req, res) {
-        console.log(req.body.eventId);
+        // console.log(req.params.eventId);
         db.Event
-            .findById({ _id: mongoose.Types.ObjectId(req.body.eventId) })
+            .findById({ _id: mongoose.Types.ObjectId(req.params.eventId) })
             .then(event => event.remove())
             .then(event => {
-                db.User.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.userId) }, { $pull: { events: req.body.eventId }})
+                db.User.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.userId) }, { $pull: { events: req.params.eventId }})
                     .then(user => {
                         res.json(user);
                     })
