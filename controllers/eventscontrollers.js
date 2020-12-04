@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 
 module.exports = {
     create: function (req, res) {
-        console.log(req.body);
+        console.log(`requestBody: ${req.body}`);
         console.log(req.params);
         db.Event
             .create({
@@ -35,6 +35,22 @@ module.exports = {
                 path: "events"
             })
             .then(events => res.json(events))
+            .catch(err => res.status(422).json(err));
+    },
+    remove: function (req, res) {
+        console.log(req.body.eventId);
+        db.Event
+            .findById({ _id: mongoose.Types.ObjectId(req.body.eventId) })
+            .then(event => event.remove())
+            .then(event => {
+                db.User.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.userId) }, { $pull: { events: req.body.eventId }})
+                    .then(user => {
+                        res.json(user);
+                    })
+                    .catch(err => {
+                        res.status(422).json(err);
+                    });
+            })
             .catch(err => res.status(422).json(err));
     }
 }
