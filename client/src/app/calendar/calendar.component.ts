@@ -101,7 +101,7 @@ export class CalendarComponent implements AfterViewInit {
               start: new Date(event.start),
               end: new Date(event.end),
               color: event.color,
-              actions: event.actions,
+              actions: this.actions,
               draggable: event.draggable,
               resizable: event.resizable
             }
