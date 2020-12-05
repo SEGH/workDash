@@ -208,6 +208,11 @@ export class CalendarComponent implements AfterViewInit {
 
   editEvent() {
     this.selectedEvent.title = this.eventInput;
+    this.calendarService.updateTitle(this.selectedEvent.id, this.eventInput).subscribe(
+      () => {
+        console.log(`title updated`)
+      }
+    )
   }
 
   setView(view: CalendarView) {
