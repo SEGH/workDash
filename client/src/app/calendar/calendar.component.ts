@@ -184,14 +184,22 @@ export class CalendarComponent implements AfterViewInit {
       }
     };
 
-    this.events = [
-      ...this.events,
-      this.event
-    ];
-
     this.calendarService.saveEvent(this.event, this.userId).subscribe(
-      () => {
+      (event) => {
         console.log(`event requested for ${this.userId}`)
+        this.events = [
+          ...this.events,
+          {
+            title: event.title,
+            start: new Date(event.start),
+            end: new Date(event.end),
+            color: event.color,
+            actions: this.actions,
+            draggable: event.draggable,
+            resizable: event.resizable,
+            id: event._id
+          }
+        ];
       }
     );
   }
