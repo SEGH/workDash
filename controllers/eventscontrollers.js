@@ -20,7 +20,7 @@ module.exports = {
                 db.User.findOneAndUpdate({ _id: mongoose.Types.ObjectId(req.params.userId) }, { $push: { events: event }})
                     .then(user => {
                         console.log(user);
-                        res.json(user);
+                        res.json(event);
                     })
                     .catch(err => {
                         res.status(422).json(err);
