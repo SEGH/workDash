@@ -51,6 +51,11 @@ export class CalendarComponent implements AfterViewInit {
       a11yLabel: 'Delete',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.events = this.events.filter((iEvent) => iEvent !== event);
+        this.calendarService.deleteEvent(event.id, this.userId).subscribe(
+          () => {
+            console.log(`${event.id} deleted`);
+          }
+        )
       },
     },
   ];
@@ -103,7 +108,8 @@ export class CalendarComponent implements AfterViewInit {
               color: event.color,
               actions: this.actions,
               draggable: event.draggable,
-              resizable: event.resizable
+              resizable: event.resizable,
+              id: event._id
             }
           ]
           })
@@ -194,10 +200,6 @@ export class CalendarComponent implements AfterViewInit {
 
   editEvent() {
     this.selectedEvent.title = this.eventInput;
-  }
-
-  deleteEvent(eventToDelete: CalendarEvent) {
-    this.events = this.events.filter((event) => event !== eventToDelete);
   }
 
   setView(view: CalendarView) {
