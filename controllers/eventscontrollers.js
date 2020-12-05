@@ -52,5 +52,15 @@ module.exports = {
                     });
             })
             .catch(err => res.status(422).json(err));
+    },
+    updateTitle: function (req, res) {
+        console.log(req.body.title);
+        db.Event
+            .findByIdAndUpdate({ _id: mongoose.Types.ObjectId(req.params.eventId)}, { $set: { title: req.body.title }})
+            .then(event => {
+                console.log(event);
+                res.json(event);
+            })
+            .catch(err => res.status(422).json(err));
     }
 }
