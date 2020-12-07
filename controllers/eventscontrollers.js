@@ -53,14 +53,19 @@ module.exports = {
             })
             .catch(err => res.status(422).json(err));
     },
-    updateTitle: function (req, res) {
-        console.log(req.body.title);
-        db.Event
+    update: function (req, res) {
+        console.log(req.body);
+        if (req.body.title) {
+            db.Event
             .findByIdAndUpdate({ _id: mongoose.Types.ObjectId(req.params.eventId)}, { $set: { title: req.body.title }})
-            .then(event => {
-                console.log(event);
-                res.json(event);
-            })
+            .then(event => res.json(event))
             .catch(err => res.status(422).json(err));
+        }
+        else if (req.body.start) {
+            db.Event
+                .findByIdAndUpdate({ _id: mongoose.Types.ObjectId(req.params.eventId)}, { $set: { start: req.body.start, end: req.body.end }})
+                .then(event => res.json(event))
+                .catch(err => res.status(422).json(err));
+        }
     }
 }
