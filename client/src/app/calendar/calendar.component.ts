@@ -136,6 +136,7 @@ export class CalendarComponent implements AfterViewInit {
     newStart,
     newEnd,
   }: CalendarEventTimesChangedEvent): void {
+    console.log("event time change")
     this.events = this.events.map((iEvent) => {
       if (iEvent === event) {
         return {
@@ -147,14 +148,26 @@ export class CalendarComponent implements AfterViewInit {
       return iEvent;
     });
     this.handleEvent('Dropped or resized', event);
+    let update = {
+      start: newStart,
+      end: newEnd
+    }
+    this.calendarService.updateEvent(event.id, update).subscribe(
+      () => {
+        console.log(`Event time updated`);
+      }
+    )
   }
 
   selectedEvent: CalendarEvent<any>
 
   handleEvent(action: string, event: CalendarEvent): void {
-    this.modalData = { event, action };
-    this.modal.open(this.modalContent, { size: 'lg' });
-    this.selectedEvent = event;
+    // console.log(action);
+    if (action === "Clicked") {
+      this.modalData = { event, action };
+      this.modal.open(this.modalContent, { size: 'lg' });
+      this.selectedEvent = event;
+    }
   }
 
   event: EventData = {
@@ -208,7 +221,10 @@ export class CalendarComponent implements AfterViewInit {
 
   editEvent() {
     this.selectedEvent.title = this.eventInput;
-    this.calendarService.updateTitle(this.selectedEvent.id, this.eventInput).subscribe(
+    let update = {
+      title: this.eventInput
+    }
+    this.calendarService.updateEvent(this.selectedEvent.id, update).subscribe(
       () => {
         console.log(`title updated`)
       }
