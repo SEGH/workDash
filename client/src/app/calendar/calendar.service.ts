@@ -51,9 +51,8 @@ export class CalendarService {
     return this.http.delete(`api/events/${userId}/${eventId}`);
   }
 
-  updateTitle(eventId, title) {
-    console.log(`event ${eventId} updated to ${title}`);
-    const body = { title: title };
-    return this.http.put(`api/events/${eventId}`, body);
+  updateEvent(eventId, update) {
+    console.log(`event ${eventId} updated`);
+    return this.http.put(`api/events/${eventId}`, update);
   }
 }
