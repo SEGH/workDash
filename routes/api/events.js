@@ -9,6 +9,6 @@ router.route("/:userId/:eventId")
     .delete(eventsController.remove);
 
 router.route("/:eventId")
-    .put(eventsController.updateTitle);
+    .put(eventsController.update);
 
 module.exports = router;
